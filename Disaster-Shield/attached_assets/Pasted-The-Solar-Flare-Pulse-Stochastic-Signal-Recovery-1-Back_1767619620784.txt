@@ -1,0 +1,50 @@
+The Solar Flare Pulse: Stochastic Signal Recovery
+
+
+1 Background & Scenario
+The Solar Dynamics Observatory (SDO) has captured a high-cadence time series of a localized
+magnetic reconnection event. This “Stellar Flare” exhibits a characteristic oscillation that grows
+exponentially as the plasma heats up, followed by a rapid quenching (shutdown) as the magnetic
+loop ruptures.
+Your task is to extract the physical parameters of this flare from the noise-corrupted sensor
+data to predict the energetics of the event.
+2 The Analytical Model
+The intensity S(t) of the flare is modeled by the following analytical template:
+S(t) = A · e
+t
+· {1 − tanh[2(t − τ )]} · sin(ωt) (1)
+Where the parameters represent physical properties of the system:
+• A : Intensity Scale (Amplitude). Range: 0 < A < 2
+• τ (tau) : Quench Time (Event Peak). Range: 1 < τ < 10
+• ω (omega) : Angular Frequency. Range: 1 < ω < 20
+3 The Challenge
+You are provided with a dataset flare data.csv containing two columns: time (t) and sensor
+intensity (ydata). The data is heavily corrupted by noise.
+Your goal is to perform a Bayesian Parameter Estimation by implementing a Random
+Walk in the 3D parameter space (A, τ, ω) using the Metropolis-Hastings algorithm.
+Statistical Assumptions
+1. Prior P(θ): Assume uniform (flat) priors within the ranges specified above for all parameters.
+2. Likelihood P(D|θ): Assume a relative error of 20% at each data point. The probability
+of the data given the parameters is estimated as proportional to exp(L), where the LogLikelihood L is defined as:
+L = −
+X
+i
+(ydata,i −
+σi
+2
+ymodel,i)
+2
+(2)
+Where the error σi
+is defined relative to the signal strength:
+σi = 0.2 · |ydata,i|
+Hint: Participants should consider how to handle numerical stability when the signal ydata
+crosses zero.
+4 Deliverables
+Participants must submit a report containing the following:
+1. Trace Plots: Graphs showing the evolution of each parameter (A, τ, ω) versus iteration
+number. Use these to demonstrate that your MCMC chain has converged.
+2. Posterior Distributions: Plot the histograms for the posterior distributions of each
+parameter.
+3. Best Fit Values: Report the Maximum A Posteriori (MAP) estimates for A, τ , and ω.
+4. Source Code: The Python script (or notebook) used to generate the results
